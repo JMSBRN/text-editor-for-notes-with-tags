@@ -1,62 +1,45 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import NoteEditorStyled from './NoteEditoreStyle.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks.ts';
 import {
   addNote,
-  editNote,
-  deleteNote,
+  selectNotes,
+  setTag,
+  setTags,
 } from '../../features/notes/notesSlice.ts';
-import { Note } from '../../features/notes/interfaces.ts';
+import generateUniqueId, {
+  checkValueWithRegex,
+} from '../../features/notes/utilsForNotes.ts';
 
-interface NoteEditorProps {
-  note?: Note;
-}
-
-function NoteEditor({ note }: NoteEditorProps) {
-  const [content, setContent] = useState(note?.content || '');
-  const dispatch = useDispatch();
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(event.target.value);
-  };
-
-  const handleSaveNote = () => {
-    if (note) {
-      dispatch(editNote({ ...note, content }));
-    } else {
-      const newNote: Note = {
-        id: Date.now().toString(),
-        content,
-      };
-      dispatch(addNote(newNote));
+function NoteEditor() {
+  const [content, setContent] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const { tag } = useAppSelector(selectNotes);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setContent(value);
+    const isTag = checkValueWithRegex(value, /#(\w+)/g);
+    if (isTag) {
+      dispatch(setTag(value.slice(1)));
     }
-    setContent('');
   };
-
-  const handleDeleteNote = () => {
-    if (note) {
-      dispatch(deleteNote(note.id));
+  const handleSveNote = () => {
+    if (content) {
+      const uniqId = generateUniqueId();
+      dispatch(addNote({ id: uniqId, content, isEdit: false }));
       setContent('');
+      dispatch(setTags(tag));
+      dispatch(setTag(''));
     }
   };
   return (
-    <div>
-      <textarea value={content} onChange={handleInputChange} />
-      <button type="button" onClick={handleSaveNote}>
-        {note ? 'Update Note' : 'Save Note'}
+    <NoteEditorStyled>
+      <input type="text" value={content} onChange={handleChange} />
+      <button type="button" onClick={handleSveNote}>
+        Save note
       </button>
-      {note && (
-        <button type="button" onClick={handleDeleteNote}>
-          Delete Note
-        </button>
-      )}
-    </div>
+    </NoteEditorStyled>
   );
 }
-
-NoteEditor.defaultProps = {
-  note: {
-    id: undefined,
-    conttent: undefined,
-  },
-};
 
 export default NoteEditor;
