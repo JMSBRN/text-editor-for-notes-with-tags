@@ -4,7 +4,7 @@ const AppStyle = styled.div`
   margin: 0 auto;
   width: 100%;
   max-width: 800px;
-  height: 100vh;
+  height: 1000px;
   display: flex;
   flex-direction: column;
   align-items: center;

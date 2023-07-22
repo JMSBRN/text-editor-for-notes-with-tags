@@ -7,3 +7,7 @@ export const Colors = {
 export const Fonts = {
   FAMILY: 'Arial, sans-serif',
 };
+
+export const Regex = {
+  TAG: /^(?!.*##.*)(?!.*#w#.*)(?!.*##w##.*)(?!.*#(w+)#.*)#.*$/g,
+};

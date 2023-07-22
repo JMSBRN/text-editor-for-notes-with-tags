@@ -1,28 +1,22 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Note } from './interfaces.ts';
+import { Note, NoteTag } from './interfaces.ts';
 import { RootState } from '../../store/store.ts';
 
 interface InitialNotesState {
   notes: Note[];
-  tags: string[];
-  tag: string;
+  tag: NoteTag;
 }
 const initialState: InitialNotesState = {
   notes: [],
-  tags: [],
-  tag: '',
+  tag: { id: '', text: '' },
 };
 const notesSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
-    setTag: (state, action: PayloadAction<string>) => {
+    setTextTag: (state, action: PayloadAction<string>) => {
       const s = state;
-      s.tag = action.payload;
-    },
-    setTags: (state, action: PayloadAction<string>) => {
-      const s = state;
-      s.tags = [...s.tags, action.payload];
+      s.tag.text = action.payload;
     },
     addNote: (state, action: PayloadAction<Note>) => {
       state.notes.push(action.payload);
@@ -48,7 +42,7 @@ const notesSlice = createSlice({
   },
 });
 
-export const { setTag, setTags, setisEditMode, addNote, editNote, deleteNote } =
+export const { setTextTag, setisEditMode, addNote, editNote, deleteNote } =
   notesSlice.actions;
 export const selectNotes = (state: RootState) => state.notes;
 export default notesSlice.reducer;

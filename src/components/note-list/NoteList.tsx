@@ -38,6 +38,8 @@ function NoteList() {
       {notes.map((el) => (
         <NoteStyled key={el.id}>
           <p>{el.id}</p>
+          <br />
+          <p>tag: {el.tag.text}</p>
           <p>{el.content}</p>
           {el.isEdit && (
             <input
@@ -47,7 +49,7 @@ function NoteList() {
             />
           )}
           <button type="button" onClick={() => handlEditNote(el)}>
-            Edit
+            {el.isEdit ? 'Save' : 'Edit'}
           </button>
           <button type="button" onClick={() => handleDeleteNote(el)}>
             Delete

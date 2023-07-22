@@ -4,12 +4,12 @@ import { useAppSelector } from '../../hooks/storeHooks.ts';
 import { selectNotes } from '../../features/notes/notesSlice.ts';
 
 function TagList() {
-  const { tag, tags } = useAppSelector(selectNotes);
+  const { notes, tag } = useAppSelector(selectNotes);
   return (
     <TagListStyled>
-      {tag}
-      {tags.map((el) => (
-        <div>{el}</div>
+      <div className="">tag: {tag.text}</div>
+      {notes.map((el) => (
+        <div key={el.content + el.id}>{el.tag.text}</div>
       ))}
     </TagListStyled>
   );
