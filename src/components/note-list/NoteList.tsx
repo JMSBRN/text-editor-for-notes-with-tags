@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   deleteNote,
@@ -9,14 +9,22 @@ import {
 import { NoteListStyled, NoteStyled } from './NoteListStyle.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import { Note } from '../../features/notes/interfaces.ts';
+import {
+  checkHash,
+  cutSymbolIfExist,
+} from '../../features/notes/utilsForNotes.ts';
 
 function NoteList() {
   const { notes } = useSelector(selectNotes);
   const dispatch = useAppDispatch();
+  const [isTagMode, setIsTagMode] = useState<boolean>(false);
+  const [tagModeText, setTagModetext] = useState<string>('');
 
   const handlEditNote = (note: Note) => {
     dispatch(editNote(note));
     dispatch(setisEditMode(note));
+    setIsTagMode(false);
+    setTagModetext('');
   };
   const handleChangeNoteContent = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -25,12 +33,32 @@ function NoteList() {
     const { value } = e.target;
     const { isEdit } = note;
     if (isEdit) {
-      dispatch(editNote({ ...note, content: value }));
+      const content = cutSymbolIfExist(value, '#');
+      dispatch(editNote({ ...note, content }));
+      const isHashExist = checkHash(value);
+      if (isHashExist) {
+        setIsTagMode(true);
+      }
     }
   };
   const handleDeleteNote = (note: Note) => {
     const { id } = note;
     dispatch(deleteNote(id));
+  };
+
+  const handleChangeNoteTagTex = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    note: Note
+  ) => {
+    const { value } = e.target;
+    setTagModetext(value);
+    const { tag } = note;
+    const { id } = tag;
+    const text = cutSymbolIfExist(value, '#');
+    dispatch(editNote({ ...note, tag: { id, text } }));
+    if (!value) {
+      setIsTagMode(false);
+    }
   };
 
   return (
@@ -39,15 +67,21 @@ function NoteList() {
         <NoteStyled key={el.id}>
           <p>{el.id}</p>
           <br />
-          <p>tag: {el.tag.text}</p>
-          <p>{el.content}</p>
-          {el.isEdit && (
-            <input
-              type="text"
-              value={el.content}
-              onChange={(e) => handleChangeNoteContent(e, el)}
-            />
-          )}
+          <p>{`${el.content} ${el.tag.text}`}</p>
+          {el.isEdit &&
+            (isTagMode ? (
+              <input
+                type="text"
+                value={el.tag.text || tagModeText}
+                onChange={(e) => handleChangeNoteTagTex(e, el)}
+              />
+            ) : (
+              <input
+                type="text"
+                value={el.content}
+                onChange={(e) => handleChangeNoteContent(e, el)}
+              />
+            ))}
           <button type="button" onClick={() => handlEditNote(el)}>
             {el.isEdit ? 'Save' : 'Edit'}
           </button>

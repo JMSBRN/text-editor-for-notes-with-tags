@@ -3,37 +3,34 @@ import NoteEditorStyled from './NoteEditoreStyle.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import { addNote, setTextTag } from '../../features/notes/notesSlice.ts';
 import generateUniqueId, {
-  checkValueWithRegex,
   cutSymbolIfExist,
+  setTextForTag,
 } from '../../features/notes/utilsForNotes.ts';
-import { Regex } from '../../constants.ts';
 
 function NoteEditor() {
   const [content, setContent] = useState<string>('');
   const dispatch = useAppDispatch();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+    const textForTag = setTextForTag(value);
+    dispatch(setTextTag(textForTag));
     setContent(value);
-    const cutContent = cutSymbolIfExist(content, '#');
-    const isTagMode = checkValueWithRegex(content, Regex.TAG);
-    if (isTagMode) {
-      dispatch(setTextTag(cutContent));
-    }
   };
   const handleSveNote = () => {
     if (content) {
       const uniqId = generateUniqueId();
-      const cutContent = cutSymbolIfExist(content, '#');
-      const isTagMode = checkValueWithRegex(content, Regex.TAG);
+      const text = setTextForTag(content);
+      const contentWithoutHash = cutSymbolIfExist(content, '#');
       dispatch(
         addNote({
           id: uniqId,
-          content: cutContent,
+          content: contentWithoutHash,
           isEdit: false,
-          tag: { id: uniqId, text: isTagMode ? cutContent : '' },
+          tag: { id: uniqId, text },
         })
       );
       setContent('');
+      dispatch(setTextTag(''));
     }
   };
   return (

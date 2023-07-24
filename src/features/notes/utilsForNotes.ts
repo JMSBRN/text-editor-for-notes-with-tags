@@ -15,3 +15,29 @@ export const cutSymbolIfExist = (value: string, symbol: string) => {
   const regex = new RegExp(symbol, 'g');
   return value.replace(regex, '');
 };
+
+export const setTextAfterHash = (value: string) => {
+  const index = value.indexOf('#');
+  if (index !== -1) {
+    return value.slice(index, value.length);
+  }
+  return '';
+};
+
+export const checkHash = (text: string) => {
+  const index = text.indexOf('#');
+  if (index !== -1) {
+    return true;
+  }
+  return false;
+};
+
+export const setTextForTag = (content: string) => {
+  const textAfterHash = setTextAfterHash(content);
+  const cutContent = cutSymbolIfExist(textAfterHash, '#');
+  const isTagMode = checkHash(content);
+  if (isTagMode) {
+    return cutContent;
+  }
+  return '';
+};

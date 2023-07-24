@@ -29,10 +29,11 @@ const notesSlice = createSlice({
       }
     },
     editNote: (state, action: PayloadAction<Note>) => {
-      const { id, content } = action.payload;
+      const { id, content, tag } = action.payload;
       const note = state.notes.find((n) => n.id === id);
       if (note) {
         note.content = content;
+        note.tag = tag;
       }
     },
     deleteNote: (state, action: PayloadAction<string>) => {

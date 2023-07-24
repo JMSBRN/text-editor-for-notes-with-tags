@@ -7,7 +7,7 @@ function TagList() {
   const { notes, tag } = useAppSelector(selectNotes);
   return (
     <TagListStyled>
-      <div className="">tag: {tag.text}</div>
+      {tag.text && <div className="">{tag.text}</div>}
       {notes.map((el) => (
         <div key={el.content + el.id}>{el.tag.text}</div>
       ))}
