@@ -14,3 +14,22 @@ export const NoteStyled = styled.div`
   align-items: center;
   justify-content: space-between;
 `;
+export const ContentStyled = styled.div`
+  margin-left: 20px;
+  width: 300px;
+  height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+export const ButtonsContainer = styled.div`
+  width: 150px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;

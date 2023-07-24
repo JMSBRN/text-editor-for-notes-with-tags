@@ -6,7 +6,12 @@ import {
   selectNotes,
   setisEditMode,
 } from '../../features/notes/notesSlice.ts';
-import { NoteListStyled, NoteStyled } from './NoteListStyle.ts';
+import {
+  NoteListStyled,
+  NoteStyled,
+  ContentStyled,
+  ButtonsContainer,
+} from './NoteListStyle.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import { Note } from '../../features/notes/interfaces.ts';
 import {
@@ -18,13 +23,11 @@ function NoteList() {
   const { notes } = useSelector(selectNotes);
   const dispatch = useAppDispatch();
   const [isTagMode, setIsTagMode] = useState<boolean>(false);
-  const [tagModeText, setTagModetext] = useState<string>('');
 
   const handlEditNote = (note: Note) => {
     dispatch(editNote(note));
     dispatch(setisEditMode(note));
     setIsTagMode(false);
-    setTagModetext('');
   };
   const handleChangeNoteContent = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -51,7 +54,6 @@ function NoteList() {
     note: Note
   ) => {
     const { value } = e.target;
-    setTagModetext(value);
     const { tag } = note;
     const { id } = tag;
     const text = cutSymbolIfExist(value, '#');
@@ -64,31 +66,49 @@ function NoteList() {
   return (
     <NoteListStyled>
       {notes.map((el) => (
-        <NoteStyled key={el.id}>
-          <p>{el.id}</p>
-          <br />
-          <p>{`${el.content} ${el.tag.text}`}</p>
-          {el.isEdit &&
-            (isTagMode ? (
-              <input
-                type="text"
-                value={el.tag.text || tagModeText}
-                onChange={(e) => handleChangeNoteTagTex(e, el)}
-              />
-            ) : (
-              <input
-                type="text"
-                value={el.content}
-                onChange={(e) => handleChangeNoteContent(e, el)}
-              />
-            ))}
-          <button type="button" onClick={() => handlEditNote(el)}>
-            {el.isEdit ? 'Save' : 'Edit'}
-          </button>
-          <button type="button" onClick={() => handleDeleteNote(el)}>
-            Delete
-          </button>
-        </NoteStyled>
+        <div key={el.id}>
+          {!el.hidden && (
+            <NoteStyled>
+              <ContentStyled>
+                {el.content}
+                <span
+                  style={
+                    el.isEdit
+                      ? {
+                          backgroundColor: 'yellow',
+                          padding: '0 3px',
+                        }
+                      : undefined
+                  }
+                >
+                  {el.tag.text}
+                </span>
+              </ContentStyled>
+              {el.isEdit &&
+                (isTagMode ? (
+                  <input
+                    type="text"
+                    value={el.tag.text}
+                    onChange={(e) => handleChangeNoteTagTex(e, el)}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={el.content}
+                    onChange={(e) => handleChangeNoteContent(e, el)}
+                  />
+                ))}
+              <ButtonsContainer>
+                <button type="button" onClick={() => handlEditNote(el)}>
+                  {el.isEdit ? 'Save' : 'Edit'}
+                </button>
+                <button type="button" onClick={() => handleDeleteNote(el)}>
+                  Delete
+                </button>
+              </ButtonsContainer>
+            </NoteStyled>
+          )}
+        </div>
       ))}
     </NoteListStyled>
   );

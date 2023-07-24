@@ -26,6 +26,7 @@ function NoteEditor() {
           id: uniqId,
           content: contentWithoutHash,
           isEdit: false,
+          hidden: false,
           tag: { id: uniqId, text },
         })
       );

@@ -14,6 +14,10 @@ const notesSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
+    setNotes: (state, action) => {
+      const s = state;
+      s.notes = action.payload;
+    },
     setTextTag: (state, action: PayloadAction<string>) => {
       const s = state;
       s.tag.text = action.payload;
@@ -29,11 +33,12 @@ const notesSlice = createSlice({
       }
     },
     editNote: (state, action: PayloadAction<Note>) => {
-      const { id, content, tag } = action.payload;
+      const { id, content, tag, hidden } = action.payload;
       const note = state.notes.find((n) => n.id === id);
       if (note) {
         note.content = content;
         note.tag = tag;
+        note.hidden = hidden;
       }
     },
     deleteNote: (state, action: PayloadAction<string>) => {
@@ -43,7 +48,13 @@ const notesSlice = createSlice({
   },
 });
 
-export const { setTextTag, setisEditMode, addNote, editNote, deleteNote } =
-  notesSlice.actions;
+export const {
+  setNotes,
+  setTextTag,
+  setisEditMode,
+  addNote,
+  editNote,
+  deleteNote,
+} = notesSlice.actions;
 export const selectNotes = (state: RootState) => state.notes;
 export default notesSlice.reducer;
