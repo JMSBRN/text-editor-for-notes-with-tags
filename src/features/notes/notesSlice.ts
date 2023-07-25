@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { Note, NoteTag } from './interfaces.ts';
+import { NoteHook, NoteTag } from './interfaces.ts';
 import { RootState } from '../../store/store.ts';
 
 interface InitialNotesState {
-  notes: Note[];
+  notes: NoteHook[];
   tag: NoteTag;
 }
 const initialState: InitialNotesState = {
@@ -22,17 +22,17 @@ const notesSlice = createSlice({
       const s = state;
       s.tag.text = action.payload;
     },
-    addNote: (state, action: PayloadAction<Note>) => {
+    addNote: (state, action: PayloadAction<NoteHook>) => {
       state.notes.push(action.payload);
     },
-    setisEditMode: (state, action: PayloadAction<Note>) => {
+    setisEditMode: (state, action: PayloadAction<NoteHook>) => {
       const { id, isEdit } = action.payload;
       const note = state.notes.find((n) => n.id === id);
       if (note) {
         note.isEdit = !isEdit;
       }
     },
-    editNote: (state, action: PayloadAction<Note>) => {
+    editNote: (state, action: PayloadAction<NoteHook>) => {
       const { id, content, tag, hidden } = action.payload;
       const note = state.notes.find((n) => n.id === id);
       if (note) {

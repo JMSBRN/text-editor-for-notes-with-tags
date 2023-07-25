@@ -1,15 +1,11 @@
 import React from 'react';
 import AppStyle from './styles/AppStyle.ts';
-import NoteEditor from './components/note-editor/NoteEditor.tsx';
-import NoteList from './components/note-list/NoteList.tsx';
-import TagList from './components/tag-list/TagList.tsx';
+import NoteEdotorHook from './components/note-editor/NoteEditorHook.tsx';
 
 function App() {
   return (
     <AppStyle>
-      <NoteEditor />
-      <TagList />
-      <NoteList />
+      <NoteEdotorHook />
     </AppStyle>
   );
 }

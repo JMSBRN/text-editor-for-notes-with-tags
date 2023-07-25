@@ -41,3 +41,12 @@ export const setTextForTag = (content: string) => {
   }
   return '';
 };
+
+export const getSymbolsAfterHashAnStopedAfterPoint = (
+  inputString: string
+): string[] => {
+  const regex = /#([^.]*)/g;
+  const matches = inputString.match(regex);
+
+  return matches ? matches.map((match) => match.substring(1)) : [];
+};

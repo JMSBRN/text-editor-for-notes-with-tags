@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TagListStyled from './TagListStyle.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks.ts';
 import { editNote, selectNotes } from '../../features/notes/notesSlice.ts';
