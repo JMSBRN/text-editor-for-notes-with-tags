@@ -1,23 +1,17 @@
 import React from 'react';
 import { HighlightedElement } from '../../features/notes/interfaces.ts';
 
-export function ContnetText({
+export function ContentText({
   highlightElements,
 }: {
   highlightElements: HighlightedElement[];
 }) {
   return (
     <div>
-      {highlightElements.map((el) =>
-        el.isHighlighted ? (
-          <span key={el.text} style={{ backgroundColor: 'yellow' }}>
-            {el.text}
-          </span>
-        ) : (
-          <span key={el.text}>{el.text}</span>
-        )
-      )}
+      {highlightElements.map((el) => (
+        <span key={el.text}>{el.text}</span>
+      ))}
     </div>
   );
 }
-export default ContnetText;
+export default ContentText;

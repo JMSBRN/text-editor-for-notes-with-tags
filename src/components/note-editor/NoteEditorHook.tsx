@@ -52,7 +52,12 @@ function NoteEditorHook() {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        margin: '0 auto',
+        height: '700px',
+      }}
+    >
       <div className="tag">{tag}</div>
       <input type="text" value={inputValue} onChange={handleInputvalue} />
       <button type="button" onClick={handleCreateNote}>
