@@ -1,26 +1,29 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit';
 import { NoteHook, NoteTag } from './interfaces.ts';
 import { RootState } from '../../store/store.ts';
+import fetchItems from './thunks/NotesDbThunks.ts';
 
 interface InitialNotesState {
   notes: NoteHook[];
   tag: NoteTag;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: SerializedError | null;
 }
 const initialState: InitialNotesState = {
   notes: [],
   tag: { id: '', text: '' },
+  status: 'idle',
+  error: null,
 };
 const notesSlice = createSlice({
   name: 'notes',
   initialState,
   reducers: {
     setNotes: (state, action) => {
-      const s = state;
-      s.notes = action.payload;
+      state.notes = action.payload;
     },
     setTextTag: (state, action: PayloadAction<string>) => {
-      const s = state;
-      s.tag.text = action.payload;
+      state.tag.text = action.payload;
     },
     addNote: (state, action: PayloadAction<NoteHook>) => {
       state.notes.push(action.payload);
@@ -42,9 +45,23 @@ const notesSlice = createSlice({
       }
     },
     deleteNote: (state, action: PayloadAction<string>) => {
-      const s = state;
-      s.notes = state.notes.filter((note) => note.id !== action.payload);
+      state.notes = state.notes.filter((note) => note.id !== action.payload);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchItems.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchItems.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.notes = action.payload;
+      })
+      .addCase(fetchItems.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error;
+      });
   },
 });
 
