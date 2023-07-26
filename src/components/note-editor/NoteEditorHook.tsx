@@ -27,7 +27,7 @@ function NoteEditorHook() {
     handleInputChange(e);
     const { value } = e.target;
     const symbols = getSymbolsAfterHashAnStopedAfterPoint(value);
-    setHighlightElements(highlightText());
+    setHighlightElements(highlightText);
     symbols.forEach((symbol) => {
       if (symbol) {
         if (symbol !== '#') {
