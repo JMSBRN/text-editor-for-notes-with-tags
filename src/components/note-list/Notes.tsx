@@ -1,10 +1,34 @@
-import React from 'react';
-import { useAppSelector } from '../../hooks/storeHooks.ts';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks.ts';
 import { selectNotes } from '../../features/notes/notesSlice.ts';
 import Note from '../note/Note.tsx';
+import { fetchItems } from '../../features/notes/thunks/NotesDbThunks.ts';
+import { dbReady } from '../../indexed-db/indexedDB.ts';
 
 function Notes() {
-  const { notes } = useAppSelector(selectNotes);
+  const { notes, status } = useAppSelector(selectNotes);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchItemsFromIndexedDB = async () => {
+      try {
+        await dbReady; // Wait for the database to be ready
+        dispatch(fetchItems());
+      } catch (error) {
+        throw new Error();
+      }
+    };
+
+    fetchItemsFromIndexedDB();
+  }, [dispatch]);
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>error</div>;
+  }
 
   return (
     <div className="notes">

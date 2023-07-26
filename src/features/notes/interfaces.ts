@@ -17,7 +17,7 @@ export interface Note {
 }
 
 export interface NoteHook {
-  id: string;
+  id?: number;
   content: HighlightedElement[];
   tag: string;
   isEdit: boolean;

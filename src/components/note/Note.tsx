@@ -3,17 +3,17 @@ import ContentText from '../content-text/ContentText.tsx';
 import ContentTextEditMode from '../content-text/ContentTextEditMode.tsx';
 import { NoteHook } from '../../features/notes/interfaces.ts';
 import NoteStyled from './NoteStyles.ts';
-import {
-  editNote,
-  setisEditMode,
-  deleteNote,
-} from '../../features/notes/notesSlice.ts';
+import { editNote, setisEditMode } from '../../features/notes/notesSlice.ts';
 import {
   getSymbolsAfterHashAnStopedAfterPoint,
   setArrayWithUniqItems,
 } from '../../features/notes/utilsForNotes.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import useHighlightTextAfterHash from '../../hooks/useHighlightTextAfterHash.ts';
+import {
+  deleteNoteDB,
+  updateNoteDb,
+} from '../../features/notes/thunks/NotesDbThunks.ts';
 
 function Note({ note }: { note: NoteHook }) {
   const { handleInputChange, inputText, highlightText } =
@@ -27,7 +27,8 @@ function Note({ note }: { note: NoteHook }) {
   }, [inputText]);
 
   const handleEditNote = (el: NoteHook) => {
-    dispatch(editNote(el));
+    const { id } = note;
+    if (id) dispatch(updateNoteDb({ id, updatedItem: el }));
     dispatch(setisEditMode(el));
     const arr = el.content.map(({ text }) => text);
     const uniqArr = setArrayWithUniqItems(arr);
@@ -35,7 +36,7 @@ function Note({ note }: { note: NoteHook }) {
   };
   const handleDeleteNote = (el: NoteHook) => {
     const { id } = el;
-    dispatch(deleteNote(id));
+    if (id) dispatch(deleteNoteDB(id));
   };
   const handlleChangeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleInputChange(e);

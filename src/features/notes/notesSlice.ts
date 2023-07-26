@@ -1,7 +1,12 @@
 import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit';
 import { NoteHook, NoteTag } from './interfaces.ts';
 import { RootState } from '../../store/store.ts';
-import fetchItems from './thunks/NotesDbThunks.ts';
+import {
+  addNoteDb,
+  deleteNoteDB,
+  fetchItems,
+  updateNoteDb,
+} from './thunks/NotesDbThunks.ts';
 
 interface InitialNotesState {
   notes: NoteHook[];
@@ -25,9 +30,6 @@ const notesSlice = createSlice({
     setTextTag: (state, action: PayloadAction<string>) => {
       state.tag.text = action.payload;
     },
-    addNote: (state, action: PayloadAction<NoteHook>) => {
-      state.notes.push(action.payload);
-    },
     setisEditMode: (state, action: PayloadAction<NoteHook>) => {
       const { id, isEdit } = action.payload;
       const note = state.notes.find((n) => n.id === id);
@@ -44,9 +46,6 @@ const notesSlice = createSlice({
         note.hidden = hidden;
       }
     },
-    deleteNote: (state, action: PayloadAction<string>) => {
-      state.notes = state.notes.filter((note) => note.id !== action.payload);
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,17 +60,25 @@ const notesSlice = createSlice({
       .addCase(fetchItems.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error;
+      })
+      .addCase(addNoteDb.fulfilled, (state, action) => {
+        state.notes.push(action.payload);
+      })
+      .addCase(updateNoteDb.fulfilled, (state, action) => {
+        const { id, updatedItem } = action.payload;
+        const index = state.notes.findIndex((note) => note.id === id);
+        if (index !== -1) {
+          state.notes[index] = updatedItem;
+        }
+      })
+      .addCase(deleteNoteDB.fulfilled, (state, action) => {
+        const id = action.payload;
+        state.notes = state.notes.filter((note) => note.id !== id);
       });
   },
 });
 
-export const {
-  setNotes,
-  setTextTag,
-  setisEditMode,
-  addNote,
-  editNote,
-  deleteNote,
-} = notesSlice.actions;
+export const { setNotes, setTextTag, setisEditMode, editNote } =
+  notesSlice.actions;
 export const selectNotes = (state: RootState) => state.notes;
 export default notesSlice.reducer;
