@@ -13,7 +13,7 @@ function Notes() {
     const fetchItemsFromIndexedDB = async () => {
       try {
         await dbReady; // Wait for the database to be ready
-        dispatch(fetchItems());
+        await dispatch(fetchItems());
       } catch (error) {
         throw new Error();
       }

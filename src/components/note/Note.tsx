@@ -3,7 +3,6 @@ import ContentText from '../content-text/ContentText.tsx';
 import ContentTextEditMode from '../content-text/ContentTextEditMode.tsx';
 import { NoteHook } from '../../features/notes/interfaces.ts';
 import NoteStyled from './NoteStyles.ts';
-import { setisEditMode } from '../../features/notes/notesSlice.ts';
 import {
   getSymbolsAfterHashAnStopedAfterPoint,
   setArrayWithUniqItems,
@@ -20,29 +19,28 @@ function Note({ note }: { note: NoteHook }) {
     useHighlightTextAfterHash();
   const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState<string>('');
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [tag, setTag] = useState<string>('');
-  const { id } = note;
+  const { id, isEdit } = note;
 
   useEffect(() => {
     setInputValue(inputText);
   }, [inputText]);
 
-  const handleEditNote = () => {
-    setIsEditMode(!isEditMode);
+  const handleEditNote = async () => {
     if (id)
-      dispatch(
-        updateNoteDb({ id, updatedItem: { ...note, isEdit: isEditMode } })
+      await dispatch(
+        updateNoteDb({ id, updatedItem: { ...note, isEdit: !isEdit } })
       );
-    dispatch(setisEditMode(note));
     const arr = note.content.map(({ text }) => text);
     const uniqArr = setArrayWithUniqItems(arr);
     setInputValue(uniqArr.join(''));
   };
-  const handleDeleteNote = () => {
-    if (id) dispatch(deleteNoteDB(id));
+  const handleDeleteNote = async () => {
+    if (id) await dispatch(deleteNoteDB(id));
   };
-  const handlleChangeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlleChangeContent = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     handleInputChange(e);
     const { value } = e.target;
     const symbols = getSymbolsAfterHashAnStopedAfterPoint(value);
@@ -56,7 +54,7 @@ function Note({ note }: { note: NoteHook }) {
     const content = highlightText;
     if (content.length) {
       const updatedItem: NoteHook = { ...note, content, tag };
-      if (id) dispatch(updateNoteDb({ id, updatedItem }));
+      if (id) await dispatch(updateNoteDb({ id, updatedItem }));
     }
   };
   return (

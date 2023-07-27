@@ -1,18 +1,24 @@
 import React from 'react';
-import { cutSymbolIfExist } from '../../features/notes/utilsForNotes.ts';
+import generateUniqueId, {
+  cutSymbolIfExist,
+} from '../../features/notes/utilsForNotes.ts';
 import { NoteHook } from '../../features/notes/interfaces.ts';
-import { editNote } from '../../features/notes/notesSlice.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
+import { updateNoteDb } from '../../features/notes/thunks/NotesDbThunks.ts';
 
 function Tags({ notes }: { notes: NoteHook[] }) {
   const dispatch = useAppDispatch();
-  const handleFilterTags = (
+  const uniqId = generateUniqueId();
+  const handleFilterTags = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     note: NoteHook
   ) => {
+    const currentId = Number(e.currentTarget.id);
+
     const { id, hidden } = note;
-    if (e.currentTarget.id !== id) {
-      dispatch(editNote({ ...note, hidden: !hidden }));
+    if (currentId !== id) {
+      const updatedItem = { ...note, hidden: !hidden };
+      if (id) await dispatch(updateNoteDb({ id, updatedItem }));
     }
   };
   return (
@@ -22,7 +28,7 @@ function Tags({ notes }: { notes: NoteHook[] }) {
         .map((el) => (
           <button
             type="button"
-            key={el.content + el.id}
+            key={el.content + uniqId}
             style={el.hidden ? { backgroundColor: 'white' } : undefined}
             onClick={(e) => handleFilterTags(e, el)}
           >

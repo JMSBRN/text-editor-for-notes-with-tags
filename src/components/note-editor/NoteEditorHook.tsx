@@ -35,9 +35,9 @@ function NoteEditorHook() {
       }
     });
   };
-  const handleCreateNote = () => {
+  const handleCreateNote = async () => {
     if (inputValue) {
-      dispatch(
+      await dispatch(
         addNoteDb({
           content: highlightElements,
           tag,
