@@ -12,11 +12,13 @@ export function ContentTextEditMode({
     <div>
       {highlightElements.map((el) => (
         <span key={el.text + uniqId}>
-          {el.isHighlighted ? (
-            <span style={{ backgroundColor: 'yellow' }}>{el.text}</span>
-          ) : (
-            <span key={el.text + uniqId}>{el.text}</span>
-          )}
+          <span>
+            {el.isHighlighted ? (
+              <span style={{ backgroundColor: 'yellow' }}>{el.text}</span>
+            ) : (
+              <span>{el.text}</span>
+            )}
+          </span>
         </span>
       ))}
     </div>
