@@ -3,7 +3,7 @@ import ContentText from '../content-text/ContentText.tsx';
 import ContentTextEditMode from '../content-text/ContentTextEditMode.tsx';
 import { NoteHook } from '../../features/notes/interfaces.ts';
 import NoteStyled from './NoteStyles.ts';
-import { editNote, setisEditMode } from '../../features/notes/notesSlice.ts';
+import { setisEditMode } from '../../features/notes/notesSlice.ts';
 import {
   getSymbolsAfterHashAnStopedAfterPoint,
   setArrayWithUniqItems,
@@ -20,22 +20,26 @@ function Note({ note }: { note: NoteHook }) {
     useHighlightTextAfterHash();
   const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState<string>('');
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [tag, setTag] = useState<string>('');
+  const { id } = note;
 
   useEffect(() => {
     setInputValue(inputText);
   }, [inputText]);
 
-  const handleEditNote = (el: NoteHook) => {
-    const { id } = note;
-    if (id) dispatch(updateNoteDb({ id, updatedItem: el }));
-    dispatch(setisEditMode(el));
-    const arr = el.content.map(({ text }) => text);
+  const handleEditNote = () => {
+    setIsEditMode(!isEditMode);
+    if (id)
+      dispatch(
+        updateNoteDb({ id, updatedItem: { ...note, isEdit: isEditMode } })
+      );
+    dispatch(setisEditMode(note));
+    const arr = note.content.map(({ text }) => text);
     const uniqArr = setArrayWithUniqItems(arr);
     setInputValue(uniqArr.join(''));
   };
-  const handleDeleteNote = (el: NoteHook) => {
-    const { id } = el;
+  const handleDeleteNote = () => {
     if (id) dispatch(deleteNoteDB(id));
   };
   const handlleChangeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +55,8 @@ function Note({ note }: { note: NoteHook }) {
     });
     const content = highlightText;
     if (content.length) {
-      dispatch(editNote({ ...note, content, tag }));
+      const updatedItem: NoteHook = { ...note, content, tag };
+      if (id) dispatch(updateNoteDb({ id, updatedItem }));
     }
   };
   return (
@@ -71,10 +76,10 @@ function Note({ note }: { note: NoteHook }) {
         </div>
       )}
       <div className="btns">
-        <button type="button" onClick={() => handleEditNote(note)}>
+        <button type="button" onClick={handleEditNote}>
           {note.isEdit ? 'Save' : 'Edit'}
         </button>
-        <button type="button" onClick={() => handleDeleteNote(note)}>
+        <button type="button" onClick={handleDeleteNote}>
           Delete
         </button>
       </div>

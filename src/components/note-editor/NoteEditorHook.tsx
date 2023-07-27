@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useHighlightTextAfterHash from '../../hooks/useHighlightTextAfterHash.ts';
 import { getSymbolsAfterHashAnStopedAfterPoint } from '../../features/notes/utilsForNotes.ts';
 import Tags from '../tag-list/Tags.tsx';
-import {
-  HighlightedElement,
-  NoteHook,
-} from '../../features/notes/interfaces.ts';
+import { HighlightedElement } from '../../features/notes/interfaces.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks.ts';
 import { selectNotes } from '../../features/notes/notesSlice.ts';
 import Notes from '../note-list/Notes.tsx';
@@ -16,7 +13,6 @@ function NoteEditorHook() {
     useHighlightTextAfterHash();
   const [inputValue, setInputValue] = useState<string>('');
   const [tag, setTag] = useState<string>('');
-  const [newNote, setNewNote] = useState<NoteHook | null>(null);
   const { notes } = useAppSelector(selectNotes);
   const dispatch = useAppDispatch();
   const [highlightElements, setHighlightElements] = useState<
@@ -40,13 +36,16 @@ function NoteEditorHook() {
     });
   };
   const handleCreateNote = () => {
-    if (newNote) dispatch(addNoteDb(newNote));
-    setNewNote({
-      content: highlightElements,
-      tag,
-      isEdit: false,
-      hidden: false,
-    });
+    if (inputValue) {
+      dispatch(
+        addNoteDb({
+          content: highlightElements,
+          tag,
+          isEdit: false,
+          hidden: false,
+        })
+      );
+    }
     setInputValue('');
     setTag('');
   };
