@@ -1,8 +1,8 @@
 import Dexie from 'dexie';
-import { NoteHook } from '../features/notes/interfaces.ts';
+import { Note } from '../features/notes/interfaces.ts';
 
 class MyDatabase extends Dexie {
-  items: Dexie.Table<NoteHook, number>;
+  items: Dexie.Table<Note, number>;
 
   constructor() {
     super('MyDatabase');
@@ -19,7 +19,7 @@ const db = new MyDatabase();
 // async function setupDatabase() {
 //   const itemsCount = await db.items.count();
 //   if (itemsCount === 0) {
-//     const defaultItem: NoteHook = {
+//     const defaultItem: Note = {
 //       id: 0,
 //       content: [],
 //       tag: 'default',

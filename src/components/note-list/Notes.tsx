@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks.ts';
 import { selectNotes } from '../../features/notes/notesSlice.ts';
-import Note from '../note/Note.tsx';
+import NoteComponent from '../note/NoteComponent.tsx';
 import { fetchItems } from '../../features/notes/thunks/NotesDbThunks.ts';
 import { dbReady } from '../../indexed-db/indexedDB.ts';
 
@@ -33,7 +33,7 @@ function Notes() {
   return (
     <div className="notes">
       {notes.map((note) => (
-        <div key={note.id}>{!note.hidden && <Note note={note} />}</div>
+        <div key={note.id}>{!note.hidden && <NoteComponent note={note} />}</div>
       ))}
     </div>
   );

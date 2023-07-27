@@ -10,15 +10,15 @@ export function ContentTextEditMode({
   const uniqId = generateUniqueId();
   return (
     <div>
-      {highlightElements.map((el) =>
-        el.isHighlighted ? (
-          <span key={el.text + uniqId} style={{ backgroundColor: 'yellow' }}>
-            {el.text}
-          </span>
-        ) : (
-          <span key={el.text + uniqId}>{el.text}</span>
-        )
-      )}
+      {highlightElements.map((el) => (
+        <span key={el.text + uniqId}>
+          {el.isHighlighted ? (
+            <span style={{ backgroundColor: 'yellow' }}>{el.text}</span>
+          ) : (
+            <span key={el.text + uniqId}>{el.text}</span>
+          )}
+        </span>
+      ))}
     </div>
   );
 }

@@ -9,14 +9,6 @@ export interface NoteTag {
 }
 
 export interface Note {
-  id: string;
-  content: string;
-  isEdit: boolean;
-  tag: NoteTag;
-  hidden?: boolean;
-}
-
-export interface NoteHook {
   id?: number;
   content: HighlightedElement[];
   tag: string;

@@ -33,6 +33,14 @@ export const checkHash = (text: string) => {
   return false;
 };
 
+export const checkIfStringContainsHash = (inputString: string): boolean => {
+  return inputString.includes('#');
+};
+
+export const checkWordsForHash = (strings: string[]): boolean => {
+  return strings.some((str) => str.includes('#'));
+};
+
 export const setTextForTag = (content: string) => {
   const textAfterHash = setTextAfterHash(content);
   const cutContent = cutSymbolIfExist(textAfterHash, '#');
@@ -100,6 +108,5 @@ export const setHighlightText = (inputText: string): HighlightedElement[] => {
   if (remainingText) {
     highlightedElements.push({ isHighlighted: false, text: remainingText });
   }
-
   return highlightedElements;
 };

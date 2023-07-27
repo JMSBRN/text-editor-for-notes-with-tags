@@ -1,17 +1,13 @@
 import React from 'react';
-import generateUniqueId, {
-  cutSymbolIfExist,
-} from '../../features/notes/utilsForNotes.ts';
-import { NoteHook } from '../../features/notes/interfaces.ts';
+import { Note } from '../../features/notes/interfaces.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import { updateNoteDb } from '../../features/notes/thunks/NotesDbThunks.ts';
 
-function Tags({ notes }: { notes: NoteHook[] }) {
+function Tags({ notes }: { notes: Note[] }) {
   const dispatch = useAppDispatch();
-  const uniqId = generateUniqueId();
   const handleFilterTags = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    note: NoteHook
+    note: Note
   ) => {
     const currentId = Number(e.currentTarget.id);
 
@@ -28,11 +24,11 @@ function Tags({ notes }: { notes: NoteHook[] }) {
         .map((el) => (
           <button
             type="button"
-            key={el.content + uniqId}
+            key={el.id}
             style={el.hidden ? { backgroundColor: 'white' } : undefined}
             onClick={(e) => handleFilterTags(e, el)}
           >
-            {cutSymbolIfExist(el.tag, '#')}
+            {el.tag}
           </button>
         ))}
     </div>

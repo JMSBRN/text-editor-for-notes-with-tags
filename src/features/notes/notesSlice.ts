@@ -1,5 +1,5 @@
 import { PayloadAction, SerializedError, createSlice } from '@reduxjs/toolkit';
-import { NoteHook, NoteTag } from './interfaces.ts';
+import { Note, NoteTag } from './interfaces.ts';
 import { RootState } from '../../store/store.ts';
 import {
   addNoteDb,
@@ -9,7 +9,7 @@ import {
 } from './thunks/NotesDbThunks.ts';
 
 interface InitialNotesState {
-  notes: NoteHook[];
+  notes: Note[];
   tag: NoteTag;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: SerializedError | null;
@@ -30,14 +30,14 @@ const notesSlice = createSlice({
     setTextTag: (state, action: PayloadAction<string>) => {
       state.tag.text = action.payload;
     },
-    setisEditMode: (state, action: PayloadAction<NoteHook>) => {
+    setisEditMode: (state, action: PayloadAction<Note>) => {
       const { id, isEdit } = action.payload;
       const note = state.notes.find((n) => n.id === id);
       if (note) {
         note.isEdit = !isEdit;
       }
     },
-    editNote: (state, action: PayloadAction<NoteHook>) => {
+    editNote: (state, action: PayloadAction<Note>) => {
       const { id, content, tag, hidden } = action.payload;
       const note = state.notes.find((n) => n.id === id);
       if (note) {

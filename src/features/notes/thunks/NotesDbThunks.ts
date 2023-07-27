@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import db from '../../../indexed-db/indexedDB.ts';
-import { NoteHook } from '../interfaces.ts';
+import { Note } from '../interfaces.ts';
 
-export const fetchItems = createAsyncThunk<NoteHook[]>(
+export const fetchItems = createAsyncThunk<Note[]>(
   'notes/fetchItems',
   async () => {
     try {
-      const items: NoteHook[] = await db.items.toArray();
+      const items: Note[] = await db.items.toArray();
       return items;
     } catch (error) {
       throw new Error(`Error fetching items from IndexedDB: ${error}`);
@@ -16,7 +16,7 @@ export const fetchItems = createAsyncThunk<NoteHook[]>(
 
 export const addNoteDb = createAsyncThunk(
   'items/addItem',
-  async (item: NoteHook) => {
+  async (item: Note) => {
     try {
       const newItem = item;
       const id = await db.items.add(newItem);
@@ -28,11 +28,11 @@ export const addNoteDb = createAsyncThunk(
 );
 interface UpdateItemPayload {
   id: number;
-  updatedItem: NoteHook;
+  updatedItem: Note;
 }
 export const updateNoteDb = createAsyncThunk<
   UpdateItemPayload,
-  { id: number; updatedItem: NoteHook }
+  { id: number; updatedItem: Note }
 >('items/updateItem', async ({ id, updatedItem }) => {
   try {
     await db.items.update(id, updatedItem);

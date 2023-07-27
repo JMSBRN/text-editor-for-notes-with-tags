@@ -1,30 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import ContentText from '../content-text/ContentText.tsx';
 import ContentTextEditMode from '../content-text/ContentTextEditMode.tsx';
-import { NoteHook } from '../../features/notes/interfaces.ts';
+import { Note } from '../../features/notes/interfaces.ts';
 import NoteStyled from './NoteStyles.ts';
 import {
+  checkIfStringContainsHash,
   getSymbolsAfterHashAnStopedAfterPoint,
   setArrayWithUniqItems,
+  setHighlightText,
 } from '../../features/notes/utilsForNotes.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
-import useHighlightTextAfterHash from '../../hooks/useHighlightTextAfterHash.ts';
 import {
   deleteNoteDB,
   updateNoteDb,
 } from '../../features/notes/thunks/NotesDbThunks.ts';
 
-function Note({ note }: { note: NoteHook }) {
-  const { handleInputChange, inputText, highlightText } =
-    useHighlightTextAfterHash();
+function NoteComponent({ note }: { note: Note }) {
   const dispatch = useAppDispatch();
-  const [inputValue, setInputValue] = useState<string>('');
-  const [tag, setTag] = useState<string>('');
-  const { id, isEdit } = note;
+  const [inputText, setInputText] = useState<string>('');
+  const { id, isEdit, tag } = note;
+  const [currentTag, setCurrentTag] = useState<string>(tag);
 
   useEffect(() => {
-    setInputValue(inputText);
-  }, [inputText]);
+    const f = async () => {
+      if (id && isEdit)
+        await dispatch(
+          updateNoteDb({ id, updatedItem: { ...note, isEdit: false } })
+        );
+    };
+    f();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleEditNote = async () => {
     if (id)
@@ -33,7 +39,7 @@ function Note({ note }: { note: NoteHook }) {
       );
     const arr = note.content.map(({ text }) => text);
     const uniqArr = setArrayWithUniqItems(arr);
-    setInputValue(uniqArr.join(''));
+    setInputText(uniqArr.join(''));
   };
   const handleDeleteNote = async () => {
     if (id) await dispatch(deleteNoteDB(id));
@@ -41,19 +47,18 @@ function Note({ note }: { note: NoteHook }) {
   const handlleChangeContent = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    handleInputChange(e);
     const { value } = e.target;
+    setInputText(value);
     const symbols = getSymbolsAfterHashAnStopedAfterPoint(value);
+    const isHashExisted = checkIfStringContainsHash(inputText);
     symbols.forEach((symbol) => {
-      if (symbol) {
-        if (symbol !== '#') {
-          setTag(symbol);
-        }
+      if (isHashExisted) {
+        setCurrentTag(symbol);
       }
     });
-    const content = highlightText;
-    if (content.length) {
-      const updatedItem: NoteHook = { ...note, content, tag };
+    const content = setHighlightText(value);
+    if (inputText) {
+      const updatedItem: Note = { ...note, content, tag: currentTag };
       if (id) await dispatch(updateNoteDb({ id, updatedItem }));
     }
   };
@@ -68,7 +73,7 @@ function Note({ note }: { note: NoteHook }) {
           <input
             style={{ width: '330px' }}
             type="text"
-            value={inputValue}
+            value={inputText}
             onChange={(e) => handlleChangeContent(e)}
           />
         </div>
@@ -85,4 +90,4 @@ function Note({ note }: { note: NoteHook }) {
   );
 }
 
-export default Note;
+export default NoteComponent;

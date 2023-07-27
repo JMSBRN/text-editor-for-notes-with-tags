@@ -8,7 +8,7 @@ const useHighlightTextAfterHash = () => {
     setInputText(e.target.value);
   };
 
-  return { inputText, handleInputChange, highlightText };
+  return { inputText, handleInputChange, highlightText, setInputText };
 };
 
 export default useHighlightTextAfterHash;
