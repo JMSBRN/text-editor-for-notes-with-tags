@@ -19,7 +19,9 @@ function NoteEditor() {
     setInputValue(inputText);
   }, [inputText]);
 
-  const handleInputvalue = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputvalue = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
     handleInputChange(e);
     const { value } = e.target;
     const symbols = getSymbolsAfterHashAnStopedAfterPoint(value);

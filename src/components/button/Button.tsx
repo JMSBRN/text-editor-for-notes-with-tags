@@ -7,7 +7,12 @@ interface ButtonProps {
 }
 function Button({ onClick, textButton }: ButtonProps) {
   return (
-    <ButtonStyled type="button" onClick={onClick}>
+    <ButtonStyled
+      variant="contained"
+      color="primary"
+      type="button"
+      onClick={onClick}
+    >
       {textButton}
     </ButtonStyled>
   );

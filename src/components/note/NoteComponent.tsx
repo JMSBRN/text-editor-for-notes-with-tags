@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import ContentText from '../content-text/ContentText.tsx';
 import ContentTextEditMode from '../content-text/ContentTextEditMode.tsx';
 import { Note } from '../../features/notes/interfaces.ts';
-import NoteStyled from './NoteStyles.ts';
+import {
+  NoteStyled,
+  ButtonsContainer,
+  ContentContainer,
+} from './NoteStyles.ts';
 import {
   checkIfStringContainsHash,
   getSymbolsAfterHashAnStopedAfterPoint,
@@ -66,20 +70,22 @@ function NoteComponent({ note }: { note: Note }) {
     }
   };
   return (
-    <NoteStyled key={note.id}>
-      <div className="id" style={{ fontSize: '10px' }}>
-        {!note.isEdit && <ContentText highlightElements={note.content} />}
-      </div>
-      {note.isEdit && (
-        <div>
-          <ContentTextEditMode highlightElements={note.content} />
-          <InputWithPromise
-            value={inputText}
-            onChange={(e) => handlleChangeContent(e)}
-          />
-        </div>
-      )}
-      <div className="btns">
+    <NoteStyled key={note.id} elevation={13}>
+      <ContentContainer>
+        {note.isEdit ? (
+          <div>
+            <ContentTextEditMode highlightElements={note.content} />
+            <InputWithPromise
+              value={inputText}
+              onChange={(e) => handlleChangeContent(e)}
+            />
+          </div>
+        ) : (
+          <ContentText highlightElements={note.content} />
+        )}
+      </ContentContainer>
+
+      <ButtonsContainer>
         <Button
           textButton={note.isEdit ? 'Save' : 'Edit'}
           onClick={handleEditNote}
@@ -88,7 +94,7 @@ function NoteComponent({ note }: { note: Note }) {
           textButton="Delete"
           onClickPromise={handleDeleteNote}
         />
-      </div>
+      </ButtonsContainer>
     </NoteStyled>
   );
 }

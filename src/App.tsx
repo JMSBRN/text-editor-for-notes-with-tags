@@ -7,10 +7,14 @@ import NoteEditorHook from './components/note-editor/NoteEditor.tsx';
 
 function App() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
+    <Container maxWidth="md">
+      <Box sx={{ my: 5 }}>
         <AppStyle>
-          <Typography variant="h5" component="h1" gutterBottom>
+          <Typography
+            variant="h5"
+            component="h1"
+            sx={{ m: '0 20px', mb: '40px' }}
+          >
             Welcome to Note Editor with Tags, the app for easy note
             organization. Create, edit, delete, and tag notes for fast access.
             Write reminders, lists, recipes, journals, and more. Enjoy the
