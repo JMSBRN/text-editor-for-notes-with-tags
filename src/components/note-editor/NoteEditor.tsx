@@ -7,6 +7,7 @@ import { selectNotes } from '../../features/notes/notesSlice.ts';
 import Notes from '../note-list/Notes.tsx';
 import { addNoteDb } from '../../features/notes/thunks/NotesDbThunks.ts';
 import InputForm from '../input-form/InputForm.tsx';
+import NoteEditoStyled from './NoteEditorStyles.ts';
 
 function NoteEditor() {
   const { handleInputChange, inputText, highlightText } =
@@ -49,12 +50,7 @@ function NoteEditor() {
   };
 
   return (
-    <div
-      style={{
-        margin: '0 auto',
-        height: '700px',
-      }}
-    >
+    <NoteEditoStyled>
       <div className="tag">{tag}</div>
       <InputForm
         onChange={handleInputvalue}
@@ -65,7 +61,7 @@ function NoteEditor() {
         <Tags notes={notes} />
       </div>
       <Notes />
-    </div>
+    </NoteEditoStyled>
   );
 }
 

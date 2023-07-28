@@ -3,6 +3,7 @@ import { Note } from '../../features/notes/interfaces.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import { updateNoteDb } from '../../features/notes/thunks/NotesDbThunks.ts';
 import Tag from '../tag/Tag.tsx';
+import TagsStyled from './TagsStyles.ts';
 
 function Tags({ notes }: { notes: Note[] }) {
   const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ function Tags({ notes }: { notes: Note[] }) {
     }
   };
   return (
-    <div className="tags" style={{ display: 'flex' }}>
+    <TagsStyled elevation={0}>
       {notes
         .filter((el) => el.tag !== '')
         .map((el) => (
@@ -30,7 +31,7 @@ function Tags({ notes }: { notes: Note[] }) {
             onClick={(e) => handleFilterTags(e, el)}
           />
         ))}
-    </div>
+    </TagsStyled>
   );
 }
 

@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material';
+import Chip from '@mui/material/Chip/Chip';
 import { styled } from 'styled-components';
 
 interface TagStyledProps {
