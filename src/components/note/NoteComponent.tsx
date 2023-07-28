@@ -14,6 +14,9 @@ import {
   deleteNoteDB,
   updateNoteDb,
 } from '../../features/notes/thunks/NotesDbThunks.ts';
+import Button from '../button/Button.tsx';
+import ButtonWithPromise from '../button/ButtonWithPromise.tsx';
+import InputWithPromise from '../input/InputWithPromise.tsx';
 
 function NoteComponent({ note }: { note: Note }) {
   const dispatch = useAppDispatch();
@@ -70,21 +73,21 @@ function NoteComponent({ note }: { note: Note }) {
       {note.isEdit && (
         <div>
           <ContentTextEditMode highlightElements={note.content} />
-          <input
-            style={{ width: '330px' }}
-            type="text"
+          <InputWithPromise
             value={inputText}
             onChange={(e) => handlleChangeContent(e)}
           />
         </div>
       )}
       <div className="btns">
-        <button type="button" onClick={handleEditNote}>
-          {note.isEdit ? 'Save' : 'Edit'}
-        </button>
-        <button type="button" onClick={handleDeleteNote}>
-          Delete
-        </button>
+        <Button
+          textButton={note.isEdit ? 'Save' : 'Edit'}
+          onClick={handleEditNote}
+        />
+        <ButtonWithPromise
+          textButton="Delete"
+          onClickPromise={handleDeleteNote}
+        />
       </div>
     </NoteStyled>
   );

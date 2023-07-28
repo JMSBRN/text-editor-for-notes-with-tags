@@ -2,11 +2,12 @@ import React from 'react';
 import { Note } from '../../features/notes/interfaces.ts';
 import { useAppDispatch } from '../../hooks/storeHooks.ts';
 import { updateNoteDb } from '../../features/notes/thunks/NotesDbThunks.ts';
+import Tag from '../tag/Tag.tsx';
 
 function Tags({ notes }: { notes: Note[] }) {
   const dispatch = useAppDispatch();
   const handleFilterTags = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     note: Note
   ) => {
     const currentId = Number(e.currentTarget.id);
@@ -22,14 +23,12 @@ function Tags({ notes }: { notes: Note[] }) {
       {notes
         .filter((el) => el.tag !== '')
         .map((el) => (
-          <button
-            type="button"
+          <Tag
             key={el.id}
-            style={el.hidden ? { backgroundColor: 'white' } : undefined}
+            note={el}
+            tagText={el.tag}
             onClick={(e) => handleFilterTags(e, el)}
-          >
-            {el.tag}
-          </button>
+          />
         ))}
     </div>
   );

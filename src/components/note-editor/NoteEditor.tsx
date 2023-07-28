@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/storeHooks.ts';
 import { selectNotes } from '../../features/notes/notesSlice.ts';
 import Notes from '../note-list/Notes.tsx';
 import { addNoteDb } from '../../features/notes/thunks/NotesDbThunks.ts';
+import InputForm from '../input-form/InputForm.tsx';
 
 function NoteEditor() {
   const { handleInputChange, inputText, highlightText } =
@@ -53,10 +54,11 @@ function NoteEditor() {
       }}
     >
       <div className="tag">{tag}</div>
-      <input type="text" value={inputValue} onChange={handleInputvalue} />
-      <button type="button" onClick={handleCreateNote}>
-        Save note
-      </button>
+      <InputForm
+        onChange={handleInputvalue}
+        onClick={handleCreateNote}
+        inputValue={inputValue}
+      />
       <div className="tags">
         <Tags notes={notes} />
       </div>

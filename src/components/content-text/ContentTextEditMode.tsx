@@ -1,6 +1,7 @@
 import React from 'react';
 import { HighlightedElement } from '../../features/notes/interfaces.ts';
 import generateUniqueId from '../../features/notes/utilsForNotes.ts';
+import ContentStyled from './ContnetTextStyles.ts';
 
 export function ContentTextEditMode({
   highlightElements,
@@ -9,7 +10,7 @@ export function ContentTextEditMode({
 }) {
   const uniqId = generateUniqueId();
   return (
-    <div>
+    <ContentStyled>
       {highlightElements.map((el) => (
         <span key={el.text + uniqId}>
           <span>
@@ -21,7 +22,7 @@ export function ContentTextEditMode({
           </span>
         </span>
       ))}
-    </div>
+    </ContentStyled>
   );
 }
 export default ContentTextEditMode;
